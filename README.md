@@ -1,2 +1,2 @@
-# team-dlc-5
+# wagamama-ai
 ハッカソン前川チーム
