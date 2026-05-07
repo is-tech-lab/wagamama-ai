@@ -40,7 +40,7 @@ C) カレンダー ＋ 購買履歴
 D) すべて（カレンダー、位置情報、購買履歴、ヘルスデータ等）
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: A
+[Answer]: D
 
 ---
 
@@ -53,8 +53,8 @@ C) Slack / LINE / その他チャットツールに送信する
 D) 音声（テキスト読み上げ）で話しかけてくれる
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: C
-
+[Answer]: B
+Dへの拡張の可能性はあります
 ---
 
 ## Question 5
@@ -80,8 +80,9 @@ B) AWS ConsoleやStep Functions GUIで操作・確認できればOK
 C) CLIやAPIのみでOK（UIは不要）
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: A
-React（TypeScript）でお願いします
+[Answer]: X
+スマホアプリがいいと思います
+スマホアプリにするならReactNativeで実装したい
 
 ---
 
@@ -93,8 +94,7 @@ B) スマホデータから自動的に学習する
 C) ハッカソンではプロンプトへの指示で簡易実装（固定パーソナリティ）
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: A
-後からBに拡張できるようにしておきたい
+[Answer]: B
 
 ---
 
@@ -144,7 +144,19 @@ B) カレンダーの予定を見て、逆算して起こしてくれる
 C) ハッカソンスコープ外
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: X
+スマホのアラームと同期したい
+---
+
+## Question 12
+スマート家電連携（家事サポート）の実装範囲はどうしますか？
+
+A) 既存のスマート家電サービス（Nature Remo等）のAPIと連携する
+B) モック実装（実際のAPI連携は不要、動作確認のみ）
+C) 対応家電の種類を絞って実装（洗濯機・掃除ロボットのみなど）
+X) Other (please describe after [Answer]: tag below)
+
+[Answer]: A
 
 ---
 
@@ -175,5 +187,4 @@ X) Other (please describe after [Answer]: tag below)
 
 以下は将来的な機能アイデアとして記録しておく。ハッカソンでは実装せず、ドキュメントへの記載のみ。
 
-- **スマート家電連携**: 洗濯機・掃除ロボット等の家事を自動で手配してくれる
 - **人間味・失敗**: たまに微妙な服を提案したり、ゲームの旧バージョンを買ってきたり、起こすのを諦めたりする「完璧ではないお母さん感」
