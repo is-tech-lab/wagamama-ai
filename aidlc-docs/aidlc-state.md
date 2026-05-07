@@ -4,7 +4,7 @@
 - **Project Name**: わがママAI（旧称: Ghost Host）
 - **Project Type**: Greenfield
 - **Start Date**: 2026-04-28T00:00:00Z
-- **Current Stage**: INCEPTION - Requirements Analysis (awaiting team answers)
+- **Current Stage**: INCEPTION - User Stories
 
 ## Workspace State
 - **Existing Code**: No
@@ -16,21 +16,21 @@
 - **Documentation**: aidlc-docs/ only
 
 ## Extension Configuration
-- **Security Baseline**: Pending opt-in
-- **Property-Based Testing**: Pending opt-in
+| Extension | Enabled | Decided At |
+|---|---|---|
+| Security Baseline | Yes | Requirements Analysis |
+| Property-Based Testing | Yes | Requirements Analysis |
 
 ## Stage Progress
 | Stage | Status |
 |-------|--------|
 | Workspace Detection | ✅ COMPLETED |
-| Requirements Analysis | 🔄 IN PROGRESS |
-| User Stories | ⏳ PENDING |
+| Requirements Analysis | ✅ COMPLETED |
+| User Stories | 🔄 IN PROGRESS |
 | Workflow Planning | ⏳ PENDING |
 | Application Design | ⏳ PENDING |
 | Units Generation | ⏳ PENDING |
 
 ## Next Action (for session resumption)
-1. Read `aidlc-docs/inception/requirements/requirement-verification-questions.md`
-2. Verify all `[Answer]:` tags are filled in
-3. Proceed with Requirements Analysis Step 7 (generate requirements.md)
-4. Then continue to User Stories / Workflow Planning
+1. Read `aidlc-docs/inception/requirements/requirements.md`
+2. Continue with User Stories stage
