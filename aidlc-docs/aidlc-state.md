@@ -1,7 +1,7 @@
 # AI-DLC State Tracking
 
 ## Project Information
-- **Project Name**: Ghost Host - 自律型接待ゴーストマネージャー
+- **Project Name**: わがママAI（旧称: Ghost Host）
 - **Project Type**: Greenfield
 - **Start Date**: 2026-04-28T00:00:00Z
 - **Current Stage**: INCEPTION - Requirements Analysis (awaiting team answers)
