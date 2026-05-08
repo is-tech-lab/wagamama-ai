@@ -184,3 +184,343 @@ AWS 公式ドキュメント「Using AgentCore Browser with Nova Act」に記載
 - 表現統一: ✅ 「実質シングルリージョン」のような曖昧表現を排除し直接的な記述で統一
 
 ---
+
+## User Stories - Resume Stage (Part 1: Planning)
+**Timestamp**: 2026-05-08T00:00:00Z
+**User Input**: "今から/Users/user/Desktop/wagamama-ai/aidlc-docs/inception/requirements/requirements.mdを参考にユーザーストーリー進めていきたい。"
+**AI Response**: User Stories ステージ Part 1 (Planning) を再開。requirements.md とaidlc-state.md（User Stories: 🔄 IN PROGRESS）を読み込み、以下を生成:
+- `aidlc-docs/inception/plans/user-stories-assessment.md`（Step 1 アセスメント、Execute = Yes）
+- `aidlc-docs/inception/plans/story-generation-plan.md`（Step 2-7 プラン + 14 問の質問群）
+**Context**: INCEPTION Phase - User Stories - Part 1: Planning（質問への回答待ち）
+
+### アセスメント結果サマリー
+- High Priority 6 軸中 4 軸ヒット（新規機能・マルチペルソナ・複雑ビジネスロジック・チーム連携）
+- Medium Priority 4 軸ヒット（Scope, Risk, Ambiguity, Testing）
+- Skip 条件は完全に該当なし
+- Decision: ✅ Execute User Stories
+
+### Plan に含めた 14 問の質問
+Q1: メインペルソナの解像度
+Q2: サブペルソナの扱い
+Q3: ストーリー粒度（INVEST の Small）
+Q4: Acceptance Criteria の記述形式
+Q5: ストーリー breakdown 戦略
+Q6: デモシナリオ「おはよう、もう全部終わってるよ」のストーリー化
+Q7: 倫理境界・依存度調整・緊急停止の表現
+Q8: Security Baseline Extension のストーリー反映
+Q9: F3「Nova Act 代理ブラウザ操作」のストーリー深掘り度
+Q10: ダメ度メトリクス（F5 ダッシュボード）の表現
+Q11: 「ママ口調」「お節介度」の調整可能性
+Q12: Property-Based Testing Extension の Story 反映
+Q13: F4「ゼロタップ代理返信」の同意フロー
+Q14: Story 数の目安
+
+### Approval Prompt（提示予定）
+"質問ファイル `aidlc-docs/inception/plans/story-generation-plan.md` を作成しました。Q1〜Q14 までの `[Answer]:` タグに A/B/C... で回答してください。回答完了後 `done` または `回答完了` をお知らせください。"
+
+---
+
+## Requirements Revision - F4/B2 Cut (MVP 6→5 features)
+**Timestamp**: 2026-05-08T00:00:00Z
+**User Input**: "Question 13はAだけどMVP外な気がするけどどう？" → "実装としても自動返信はいらない気がします" → "Aでお願い"
+**AI Response**: 議論の結果、F4「ゼロタップ代理返信」/ B2「代理コミュニケーション」を MVP からカット。Option A（§4.3 Out of Scope に移動 + §6 将来展望に追加）を採用。
+**Context**: INCEPTION Phase - User Stories Part 1 進行中の要件改訂
+
+### カット理由
+1. 主要チャットアプリ（LINE/iMessage/Slack DM）は個人 API 制約強くハッカソン期間内の実装現実性が低い
+2. F3（Nova Act）が「実行代行」「判断機会の剥奪」を独占的に体現 → F4 と機能重複
+3. 5 つの設計選択は F4 抜きでも完全カバー（(2)(3) は F3、(1)(4)(5) は F2/F1/F3 で）
+4. リソース集中で F3 + AgentCore の核に時間配分できる
+
+### 変更したファイル
+- `aidlc-docs/inception/requirements/requirements.md`:
+  - §4.1 カテゴリ B から B2 行を削除、Note 行で Out of Scope への移動を明記
+  - §4.2 MVP 表から F4 行削除（6 機能 → 5 機能）、デモナラティブの「友達既読」行を F3「ママが食べログで予約済み・Uber 注文済み」に置き換え
+  - §4.3 Out of Scope に B2/F4 行追加（カット理由付き）
+  - §6 フェーズ3 長期展望に「代理コミュニケーション（旧 B2 / F4）」行追加
+- `aidlc-docs/aidlc-state.md`: Requirements Analysis ステータスに「2026-05-08 F4/B2 cut: MVP 6→5 機能」追記
+- `aidlc-docs/inception/plans/story-generation-plan.md`: Question 13 を N/A 化（F4 カットに伴い不要）
+
+### 影響なし
+- 5 つの設計選択（(1)〜(5)）は F1/F2/F3/F5/F6 で完全カバー → 「人をダメにする」テーマ適合性に影響なし
+- §5（NFR）に変更なし
+- AgentCore + Nova Act 連携構成（§5.2.2）は F3 中心のためそのまま
+
+---
+
+## User Stories - Plan Approval Prompt
+**Timestamp**: 2026-05-08T00:00:00Z
+**AI Response**: Q1〜Q14 への回答を確認、Step 9 曖昧性分析実施 → blocking ambiguity なし。Plan 承認プロンプトを提示。
+**Context**: INCEPTION Phase - User Stories - Part 1: Planning (approval gate)
+
+### 回答サマリー（最終）
+| Q | 回答 | 解釈 |
+|---|---|---|
+| Q1 | B | メインペルソナ 2 体（職業/生活パターン異なる） |
+| Q2 | C | サブペルソナを MVP の一部ストーリーに登場 |
+| Q3 | B | 機能 = エピック、子 2〜4 = 計 15〜20 本 |
+| Q4 | A | Acceptance Criteria は GWT 形式 |
+| Q5 | E | Hybrid (Journey × Feature) |
+| Q6 | B | Demo Narrative は冒頭で軽く触れて README へリンク |
+| Q7 | D | 倫理境界は requirements.md §2.4 に既述、stories.md では触れない |
+| Q8 | D | Security Baseline は Construction Phase に委ねる |
+| Q9 | A | F3 = 1 エピック + 3〜5 子ストーリー |
+| Q10 | D | F5 = 1 ストーリー、各機能 AC にメトリクス更新条件埋込 |
+| Q11 | C | ママ口調調整は MVP 外 |
+| Q12 | C | PBT は stories.md では触れず Construction Phase に委ねる |
+| Q13 | N/A | F4 カット済 |
+| Q14 | B | 12〜20 本目安 |
+
+### Approval Prompt（提示中）
+"以上の回答を反映した Story 生成 Plan を承認しますか？
+- ✅ 承認 → Part 2 (生成) を実行し stories.md / personas.md を生成
+- 🔧 変更要求 → 修正点を指定してください"
+
+---
+
+## User Stories - Plan Approved
+**Timestamp**: 2026-05-08T00:00:00Z
+**User Input**: "承認"
+**AI Response**: Plan 承認確認。Part 2 (Generation) を実行し stories.md / personas.md を生成中。
+**Context**: INCEPTION Phase - User Stories - Part 1 完了 → Part 2 開始
+
+---
+
+## User Stories - Generation Complete (Part 2)
+**Timestamp**: 2026-05-08T00:00:00Z
+**AI Response**: stories.md / personas.md 生成完了。Plan 承認後、全 STEP 1〜12 完了。承認待ち。
+**Context**: INCEPTION Phase - User Stories - Part 2 完了
+
+### 生成成果物
+- `aidlc-docs/inception/user-stories/stories.md` (16 本のストーリー、5 エピック、GWT AC 完備)
+- `aidlc-docs/inception/user-stories/personas.md` (メイン 2 体 + サブ 1 体 + マッピング表)
+
+### Story 分布
+- E1 ママ人格チャット UI: 3 本
+- E2 ママの先回りアドバイス: 4 本（うち 1 本サブペルソナ向け）
+- E3 ママの代理ブラウザ操作 (核): 5 本
+- E4 ママ溺愛度ダッシュボード: 1 本
+- E5 スマホデータ統合: 3 本
+合計 16 本（Q3=B / Q14=B 範囲内）
+
+### Approval Prompt（提示中）
+"User Stories と Personas が完成しました。レビューし、承認 or 変更要求をお返しください。"
+
+---
+
+## User Stories - Stage Approved & Completed
+**Timestamp**: 2026-05-08T00:00:00Z
+**User Input**: "承認"
+**AI Response**: User Stories ステージ完了として記録。次の Workflow Planning ステージへ進む準備。
+**Context**: INCEPTION Phase - User Stories ✅ COMPLETED → Workflow Planning へ遷移
+
+---
+
+## Workflow Planning - Execution Plan Generated
+**Timestamp**: 2026-05-08T00:00:00Z
+**AI Response**: 全ステージ分析完了し execution-plan.md を生成。Skip = Reverse Engineering のみ（Greenfield）、その他全ステージ EXECUTE。ハッカソンマイルストーン（5/12 / 5/30 / 6/26）に逆算したタイムライン提示。
+**Context**: INCEPTION Phase - Workflow Planning - Plan presentation
+
+### Phase Decisions
+- INCEPTION: Application Design + Units Generation を EXECUTE（5/12 必須成果物）
+- CONSTRUCTION (per-unit loop): Functional Design / NFR Requirements / NFR Design / Infrastructure Design / Code Generation / Build & Test すべて EXECUTE
+- OPERATIONS: PLACEHOLDER（決勝までに手動 / CDK Deploy 想定）
+
+### Risk Assessment
+- Risk Level: Medium-High（新技術 AgentCore/Nova Act、マルチリージョン、ハッカソン期限）
+- Rollback: Easy / Testing: Complex
+
+### Approval Prompt（提示中）
+"execution-plan.md をレビュー → 承認 / 変更要求 / Skip 復活 のいずれかでお返事ください。"
+
+---
+
+## Workflow Planning - Approved
+**Timestamp**: 2026-05-08T00:00:00Z
+**User Input**: "承認"
+**AI Response**: Workflow Planning ステージ承認確認、COMPLETED へ更新。次の Application Design ステージへ遷移。
+**Context**: INCEPTION Phase - Workflow Planning ✅ COMPLETED → Application Design へ
+
+---
+
+## Application Design - Plan Generated (Part 1)
+**Timestamp**: 2026-05-08T00:00:00Z
+**AI Response**: Application Design ステージ Part 1 開始。8 問の質問を含む application-design-plan.md を生成。
+**Context**: INCEPTION Phase - Application Design - Part 1: Planning
+
+### 8 Questions
+Q1: バックエンド Lambda の粒度（モノ / 機能別 / 境界別）
+Q2: フロント-バック チャット通信パターン（REST / WS / SSE / Push）
+Q3: AgentCore Runtime 起動方式（同期 / 非同期 EventBridge / SQS / 直接）
+Q4: メトリクス更新タイミング（リアルタイム / EventBridge / バッチ / ハイブリッド）
+Q5: 認証方式（Cognito / 固定ユーザー / Magic Link / Google OAuth）
+Q6: DynamoDB アクセスパターン（直接 SDK / Repository / ORM）
+Q7: フロント State 管理（Zustand / RTK / Context / TQ + Zustand）
+Q8: バックエンドアーキテクチャ（層分離 / Clean / 機能ベース）
+
+### Approval Prompt（提示中）
+"application-design-plan.md の Q1〜Q8 に回答 → Part 2 (生成) で components.md / component-methods.md / services.md / component-dependency.md / application-design.md を生成"
+
+---
+
+## Application Design - Answers Received & Analyzed
+**Timestamp**: 2026-05-08T00:00:00Z
+**User Input**: "全部回答しました！" (Q6/Q7/Q8 への回答完了通知)
+**AI Response**: Q1〜Q8 回答確認、Step 8 曖昧性分析実施 → 矛盾なし、blocking ambiguity なし。Part 2 (生成) を実行。
+**Context**: INCEPTION Phase - Application Design - Part 2 開始
+
+### 回答サマリー
+- Q1=A: モノ Hono Lambda
+- Q2=D: REST + プッシュ通知
+- Q3=B: 非同期起動 + EventBridge
+- Q4=B: EventBridge 経由メトリクス更新
+- Q5=D: Google OAuth (Calendar と統一)
+- Q6=B: 薄い Repository
+- Q7=A: Zustand
+- Q8=B: Clean Architecture
+
+---
+
+## Application Design - Generation Complete
+**Timestamp**: 2026-05-08T00:00:00Z
+**AI Response**: 5 つの設計ドキュメント生成完了。承認待ち。
+**Context**: INCEPTION Phase - Application Design Part 2 完了
+
+### 生成成果物
+- `aidlc-docs/inception/application-design/components.md` (62 コンポーネント)
+- `aidlc-docs/inception/application-design/component-methods.md` (約 90 メソッド／関数)
+- `aidlc-docs/inception/application-design/services.md` (8 サービス、ワークフロー定義)
+- `aidlc-docs/inception/application-design/component-dependency.md` (依存マトリックス + 4 データフロー)
+- `aidlc-docs/inception/application-design/application-design.md` (統合版、Unit 候補 7 つ提示)
+
+### Approval Prompt（提示中）
+"5 つの設計ドキュメントをレビューし、承認 or 変更要求でお返事ください。承認後 Units Generation へ。"
+
+---
+
+## Application Design - 5 Review Fixes Applied
+**Timestamp**: 2026-05-08T00:00:00Z
+**User Input**: "A" (5 件すべて反映する設計ドキュメント更新を私が一括実施)
+**AI Response**: feature-dev:code-reviewer の指摘 5 件すべてを設計 5 ドキュメントに反映完了。
+**Context**: INCEPTION Phase - Application Design - レビュー対応
+
+### 反映した修正
+1. **🔴 Critical: API Gateway 29 秒回避**（services.md §3.5）
+   - Phase A を「最小処理 + EventBridge 発行」に変更（~200ms で 202 返却）
+   - Phase A.5（新規）を追加：EventBridge → 内部 worker Lambda（最大 15 分）で HotPepper / AgentCore 同期実行
+   - 公式パターン (Process events asynchronously with API Gateway and Lambda) 準拠
+2. **🟠 High: 冪等性二重防御**（services.md §5, §5.1, component-methods.md §3.4）
+   - 全非同期ハンドラを @aws-lambda-powertools/idempotency でラップ
+   - IdempotencyStore DynamoDB テーブル追加
+   - Repository 層の markCompleted/markFailed/saveCounters に eventId 引数必須化
+   - 6 つの非同期ハンドラリスト + Idempotency Key を明記
+3. **🟠 High: OAuth ログ漏洩経路の排除**（services.md §3.2, component-methods.md §2.3）
+   - OnboardingService から googleAuthCode 受領を削除
+   - Mobile ↔ AgentCore Identity 直結フロー（PKCE は expo-auth-session 自動処理）
+   - シーケンス図書き換え
+4. **🟠 High: メトリクス計算 2 段純関数化**（components.md §3.1, component-methods.md §1.6-1.8）
+   - MetricsCounters（生カウンタ）と DamenessMetrics（Snapshot）に分離
+   - applyEvent / computeMetrics / calculateMetricsDelta の 3 純関数
+   - MetricsEvent を Discriminated Union として明示
+   - PBT 検証性質を 4 つ列挙
+   - MetricsCounters DynamoDB テーブル追加
+5. **🟡 Medium: EnrichWithExternalDataUseCase の Clean 違反**（components.md §3.2.1, component-methods.md §2.10）
+   - Use Case → ExternalDataService（Application Service）に降格
+   - application/services/ に再配置
+
+### 影響範囲（更新したファイル）
+- `aidlc-docs/inception/application-design/components.md`
+- `aidlc-docs/inception/application-design/component-methods.md`
+- `aidlc-docs/inception/application-design/services.md`
+- `aidlc-docs/inception/application-design/component-dependency.md`
+- `aidlc-docs/inception/application-design/application-design.md`
+
+### 引用した公式ソース
+- AWS Prescriptive Guidance: Process events asynchronously with API Gateway and Lambda
+- AWS Lambda Powertools Idempotency (TypeScript)
+- Amazon Bedrock AgentCore: Obtain OAuth 2.0 access token
+- AWS Security Blog: Securing AI agents with Amazon Bedrock AgentCore Identity
+- Expo Documentation: Authentication with OAuth or OpenID providers
+
+---
+
+## Application Design - Approved
+**Timestamp**: 2026-05-08T00:00:00Z
+**User Input**: "承認"
+**AI Response**: Application Design ステージ承認確認、COMPLETED へ更新。Units Generation ステージへ遷移。
+**Context**: INCEPTION Phase - Application Design ✅ COMPLETED → Units Generation へ
+
+---
+
+## Units Generation - Plan Generated (Part 1)
+**Timestamp**: 2026-05-08T00:00:00Z
+**AI Response**: Units Generation ステージ Part 1 開始。6 問の質問を含む unit-of-work-plan.md を生成。
+**Context**: INCEPTION Phase - Units Generation - Part 1: Planning
+
+### 推奨 Unit 構成（4 Unit）
+- U1: Mobile App (RN + Expo)
+- U2: Backend (Mono Hono Lambda, Clean Architecture)
+- U3: Agent Runtime (Python AgentCore Runtime + Nova Act)
+- U4: Infrastructure (CDK TypeScript)
+
+### 6 Questions
+Q1: Unit 境界（4 / 5-7 / 3 / その他）
+Q2: リポジトリ構成（モノレポ+workspace / モノレポフラット / マルチリポ）
+Q3: 共有型ライブラリ（shared パッケージ / OpenAPI 生成 / なし）
+Q4: CDK スタック粒度（単一 / 複数 / 環境分離）
+Q5: Agent Runtime 配置（モノレポ同居 / submodule / 別リポ）
+Q6: チーム編成（1 人 / 2 人 / 3 人以上）
+
+---
+
+## Units Generation - Generation Complete (Part 2)
+**Timestamp**: 2026-05-08T00:00:00Z
+**User Input**: "回答した" (Q1〜Q6 完了)
+**AI Response**: 3 ドキュメント生成完了。承認待ち。
+**Context**: INCEPTION Phase - Units Generation Part 2 完了
+
+### 回答サマリー
+- Q1=A: 4 Unit（U1 Mobile / U2 Backend / U3 Agent Runtime / U4 Infrastructure）
+- Q2=A: モノレポ + pnpm workspace
+- Q3=A: shared パッケージで型共有
+- Q4=B: 複数 CDK スタック（DataStack / AppStack / AgentStack）
+- Q5=A: Python Agent Runtime をモノレポ同居
+- Q6=C: 3 人並行開発体制
+
+### 生成成果物
+- `aidlc-docs/inception/application-design/unit-of-work.md`（4 Unit + shared、モノレポディレクトリ構成、3 CDK スタック、3 人並行体制）
+- `aidlc-docs/inception/application-design/unit-of-work-dependency.md`（依存マトリックス、CDK スタック間依存、ランタイム通信契約、並行開発ガントチャート）
+- `aidlc-docs/inception/application-design/unit-of-work-story-map.md`（16 / 16 Story 割当検証済）
+
+### 5/12 書類審査必須成果物の状況
+- [x] requirements.md
+- [x] stories.md / personas.md
+- [x] application-design.md（5 ドキュメント）
+- [x] unit-of-work.md / unit-of-work-dependency.md / unit-of-work-story-map.md
+- [x] execution-plan.md
+- [x] audit.md
+すべて揃った状態。
+
+### Approval Prompt（提示中）
+"3 ドキュメントをレビューし、承認 or 変更要求でお返事ください。承認で INCEPTION Phase 完了 → CONSTRUCTION Phase へ。"
+
+---
+
+## Units Generation - Approved (INCEPTION Phase Complete)
+**Timestamp**: 2026-05-08T00:00:00Z
+**User Input**: "承認"
+**AI Response**: Units Generation 承認 → INCEPTION Phase 全ステージ完了。CONSTRUCTION Phase へ遷移可能。
+**Context**: INCEPTION Phase ✅ COMPLETED → CONSTRUCTION Phase Per-Unit Loop へ
+
+### INCEPTION Phase 完了サマリー
+- ✅ Workspace Detection
+- ⊝ Reverse Engineering (Skipped - Greenfield)
+- ✅ Requirements Analysis (2 回改訂：5/7 hackathon 整合, 5/8 F4 cut)
+- ✅ User Stories (16 stories / 3 personas)
+- ✅ Workflow Planning (execution-plan.md)
+- ✅ Application Design (5 docs + レビュー指摘 5 件反映)
+- ✅ Units Generation (3 docs, 4 Unit 構成)
+
+### 5/12 書類審査必須成果物：すべて揃った状態 ✅
+
+---

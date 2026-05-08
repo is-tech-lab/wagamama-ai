@@ -4,7 +4,7 @@
 - **Project Name**: わがママAI（旧称: Ghost Host）
 - **Project Type**: Greenfield
 - **Start Date**: 2026-04-28T00:00:00Z
-- **Current Stage**: INCEPTION - User Stories
+- **Current Stage**: INCEPTION ✅ COMPLETED → CONSTRUCTION Phase（Per-Unit Loop）への遷移待ち
 
 ## Workspace State
 - **Existing Code**: No
@@ -25,11 +25,11 @@
 | Stage | Status |
 |-------|--------|
 | Workspace Detection | ✅ COMPLETED |
-| Requirements Analysis | ✅ COMPLETED (revised 2026-05-07 for hackathon theme alignment) |
-| User Stories | 🔄 IN PROGRESS |
-| Workflow Planning | ⏳ PENDING |
-| Application Design | ⏳ PENDING |
-| Units Generation | ⏳ PENDING |
+| Requirements Analysis | ✅ COMPLETED (revised 2026-05-07 for hackathon theme alignment, 2026-05-08 F4/B2 cut: MVP 6→5 機能) |
+| User Stories | ✅ COMPLETED (2026-05-08, 16 stories / 3 personas, F4 cut) |
+| Workflow Planning | ✅ COMPLETED (2026-05-08, all stages EXECUTE except Reverse Engineering) |
+| Application Design | ✅ COMPLETED (2026-05-08, 5 ドキュメント生成 + レビュー指摘 5 件反映) |
+| Units Generation | ✅ COMPLETED (2026-05-08, 4 Unit + shared、3 ドキュメント) |
 
 ## Hackathon Context
 - **イベント**: AWS Summit Japan 2026 AI-DLC ハッカソン
@@ -39,5 +39,6 @@
 - **決勝**: 2026-06-26 @AWS Summit Japan 2026 幕張メッセ（AWS上デプロイ済デモ必須）
 
 ## Next Action (for session resumption)
-1. Read `aidlc-docs/inception/requirements/requirements.md`（hackathon版に改訂済み）
-2. Continue with User Stories stage（5/12までに application-design / unit-of-work まで生成必要）
+1. Read `aidlc-docs/inception/application-design/` 配下 8 ドキュメント（5 application-design + 3 unit-of-work）
+2. ユーザーが Units 承認すれば INCEPTION 完了 → CONSTRUCTION Phase へ
+3. **5/12 12:00 書類審査必須成果物がすべて揃った状態**
