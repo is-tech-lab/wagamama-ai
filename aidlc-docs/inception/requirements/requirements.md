@@ -89,21 +89,21 @@
 
 ### 3.1 機能比較表
 
-| 軸 | Alexa/Siri/Google | ChatGPT/Claude | Replika/Character.ai | **わがママAI** |
-|---|---|---|---|---|
-| 起動方式 | 呼ばれて応答 | 聞かれて応答 | 話しかけて応答 | **先回りで勝手に介入** |
-| キャラ性 | 中立・無人格 | 中立・無人格 | 友人・恋人 | **お母さん（愛＋圧＋干渉）** |
-| 出力の深さ | 情報提供のみ | 情報提供のみ | 共感会話のみ | **意思決定＆実行まで代行** |
-| データ統合 | 単発クエリ | チャット履歴 | 関係性メモリ | **スマホ全データ横断** |
-| **画面外介入** | スマートホームAPIのみ | テキスト出力で完結 | テキスト出力で完結 | **🔥 Nova Actで実サイトをブラウザ操作（予約・注文・購入）** |
-| 設計思想 | 役立つ | 賢くする | 寄り添う | **意図的にダメにする** |
+| 軸 | Alexa/Siri/Google | ChatGPT/Claude | Replika/Character.ai | Web自動化ツール（Playwright等） | **わがママAI** |
+|---|---|---|---|---|---|
+| 起動方式 | 呼ばれて応答 | 聞かれて応答 | 話しかけて応答 | スクリプトで起動 | **先回りで勝手に介入** |
+| キャラ性 | 中立・無人格 | 中立・無人格 | 友人・恋人 | 無人格（開発者ツール） | **お母さん（愛＋圧＋干渉）** |
+| 出力の深さ | 情報提供のみ | 情報提供のみ | 共感会話のみ | スクリプト通りの操作 | **意思決定＆実行まで代行** |
+| データ統合 | 単発クエリ | チャット履歴 | 関係性メモリ | なし | **スマホ全データ横断** |
+| **画面外介入** | スマートホームAPIのみ | テキスト出力で完結 | テキスト出力で完結 | ブラウザ操作のみ（自然言語不可） | **🔥 Nova Actで実サイトをブラウザ操作（予約・注文・購入）** |
+| 設計思想 | 役立つ | 賢くする | 寄り添う | 開発生産性向上 | **意図的にダメにする** |
 
 ### 3.2 なぜ既存AIには真似できないか
 
 - **Big TechのAI**（Alexa, Siri, ChatGPT 等）は「ユーザーの依存を意図的に作る」設計を取れない。社会的責任・規制リスク・ブランド毀損のため。
-- **キャラクター系AI**（Replika 等）は能動的介入機能を持たない。プライバシー観点・受動応答型のアーキテクチャのため。
-- **タスクオートメーション系**（IFTTT, Zapier 等）は人格を持たないため、「お節介ママ」という心理的圧の伴う体験を提供できない。
-- **Web自動化ツール**（Playwright 単体・Puppeteer 等）は能動性も人格も持たず、開発者向けツール止まり。
+- **キャラクター系AI**（Replika, Character.ai 等）は能動的介入機能を持たない。プライバシー観点・受動応答型のアーキテクチャのため。
+- **Web自動化ツール**（Playwright・Puppeteer 等）は能動性も人格も持たず、開発者向けツール止まり。自然言語による指示も不可。
+- **タスクオートメーション系**（IFTTT, Zapier 等、§3.1 比較表外）も人格を持たないため、「お節介ママ」という心理的圧の伴う体験を提供できない。
 
 → 「**人をダメにする思想 × ママ人格 × 能動介入 × 実行代行 × 画面外への貫通**」の5軸同時実装は本サービス独自。
 → 特に **画面外への貫通** は Amazon Nova Act（2025年GA）の登場で初めて実用域に入った領域であり、本サービスはこの最先端AWSサービスを「人をダメにする」目的のために再解釈する。
@@ -128,9 +128,13 @@
 ユーザーが「自分で動く」機会を奪い、行動力と社会対応力を低下させる。
 本カテゴリは **Amazon Nova Act**（ブラウザ操作AIエージェント、2025年GA）を核として、**実在するWebサービスをママが代わりに操作**する。これにより「個人開発者は予約APIにアクセスできない」という外部制約を物理的に回避し、ユーザーから「自分で操作する機会」を完全に奪う。
 
-- **B1. 代理ブラウザ操作（予約・注文・購入）**：Nova Actで食べログ/ホットペッパー/Uber Eats Web/Amazon等を実際に操作。「ママが店予約しといたよ」「ママがUberで頼んどいたよ」「ママが洗剤買っといたよ」を実現
+- **B1. 代理ブラウザ操作（予約・注文・購入）**：Nova Act で実Webサイトを操作してユーザーに代わってアクションを完結させる
+  - 予約: 食べログ、ホットペッパー（飲食店予約）
+  - 注文: Uber Eats Web、出前館（デリバリー注文）
+  - 購入: Amazon、楽天（EC購入）
+  - Nova Act の汎用性により、ブラウザ操作可能なあらゆる Web サービスへ展開可能
+  - B1 の完了処理として、Google Calendar API へのカレンダー登録・SES での確定メール風通知が付随する（実装詳細は §5.2.2 を参照）
 - **B2. 代理コミュニケーション**：友人への返信・連絡・催促をママが代筆・代行
-- **B3. 画面外への通知連動**：Google Calendar API でユーザーカレンダーに予約自動登録、SES で予約確定メール風通知を発信
 
 #### カテゴリC：先回り介入（自己管理力を奪う）
 ユーザーが「自分で管理する」機会を奪い、自律的な生活管理能力を低下させる。
@@ -182,7 +186,7 @@
 | 機能 | 「やらない」理由 |
 |---|---|
 | A3. 意思決定相談（汎用） | F2/F3の方が「ゼロタップ」演出が強いため、汎用判断はMVP外 |
-| 公式予約・注文API連携（Uber Eats Marketplace API、ぐるなびAPI 等） | 個人開発者は契約・NDAアクセスが困難。**Nova Actのブラウザ操作で代替**するため不要 |
+| 公式予約・注文API連携（Uber Eats Marketplace API、ぐるなびAPI 等） | 個人開発者は契約・NDAアクセスが困難。**MVP では Nova Act のブラウザ操作で代替**し、将来的にハイブリッド運用へ拡張する（§6 参照） |
 | 音声インタラクション全般（電話発信・音声対話） | Amazon Connect・Polly・Lex 系は今回採用しない。世界観はテキスト＋画像＋ブラウザ操作で構成 |
 | スマート家電（実機連携） | デモ環境構築コストが見合わない |
 | C1. 就寝催促 | デモは朝のシーンに集中する方針のため、夜系機能はカット |
@@ -201,11 +205,11 @@
 - 実装方針: **React Native + Expo** を想定（クロスプラットフォーム対応・実装速度優先）
 - ネイティブアラーム・プッシュ通知連携可能なこと
 
-### 5.2 バックエンド（ハイブリッド言語構成）
+### 5.2 バックエンド（AgentCore + Nova Act 連携構成）
 
-本サービスは Nova Act SDK が Python のみ提供という制約を受け入れ、**「Nova Act 実行層だけを Python に隔離し、それ以外を TypeScript で統一する」** ハイブリッド構成を採用する。
+本サービスは AWS の最新エージェント基盤である **Amazon Bedrock AgentCore**（2025年〜2026年GA）と、ブラウザ操作AIエージェント **Amazon Nova Act**（2025年GA）の **公式推奨連携パターン** を採用する。AgentCore Browser が Nova Act に CDP endpoint を払い出し、Nova Act が自然言語指示で実Webサイトを操作するという役割分担で、F3「ママの代理ブラウザ操作」を実現する。
 
-#### 5.2.1 メインバックエンド（TypeScript 統一層）
+#### 5.2.1 メイン API 層（TypeScript / Hono）
 - 言語: **TypeScript / Node.js**
 - フレームワーク: **Hono**
 - AI推論（テキスト）: **AWS Bedrock**（Claude 系列、ママ口調生成・行動判断）
@@ -213,39 +217,85 @@
 - 実行基盤: AWS Lambda + API Gateway
 - 定期処理: EventBridge Scheduler（朝の先回り通知等）
 - データ: DynamoDB（状態・ダメ度メトリクス管理）+ S3（生成画像）
+- AgentCore 起動: `bedrock-agentcore`（高位 TS SDK）+ `@aws-sdk/client-bedrock-agentcore`（低位 SDK で未対応機能を補完）
 - 外部 API: Google Calendar API（OAuth2、予約をユーザーカレンダーに自動登録）、ホットペッパーAPI（店検索、無料）、天気API
-- カバー範囲: F1, F2, F4, F5, F6 のすべて、および F3 の TypeScript 側呼び出し処理
+- カバー範囲: F1, F2, F4, F5, F6 のすべて、および F3 の AgentCore Runtime 起動側
 
-#### 5.2.2 Nova Act 実行層（Python 隔離層）
-- 言語: **Python**（Nova Act SDK 制約のため）
-- ライブラリ: `nova-act` SDK
-- 実行基盤: **AWS Lambda（コンテナイメージ）** — ブラウザバイナリ込みのため
-- カバー範囲: F3 のブラウザ操作ワークフローのみ
-- 隔離方針: 1つの Python Lambda に Nova Act 関連コードを集約し、TypeScript 層からは「予約・注文を実行する黒箱」として扱う
+#### 5.2.2 エージェント実行層（AgentCore + Nova Act）
+F3「ママの代理ブラウザ操作」専用の隔離されたエージェント実行環境。AWS が公式に推奨する Nova Act × AgentCore の連携パターンを採用。
 
-#### 5.2.3 言語境界の連携方式
-- **MVP（5/30 予選向け）**: TypeScript Lambda から **AWS SDK Lambda.Invoke** で Python Lambda をクロスリージョン直接呼び出し（最もシンプル、最速で実装可能）
-- **決勝拡張（6/26 向け、余裕があれば）**: **Amazon Bedrock AgentCore Runtime** 経由に移行
-  - 長時間ブラウザセッション維持
-  - 管理ブラウザの再利用によるコールドスタート回避
-  - 最新AWSサービス活用としてのアピール強化
-- 言語境界は明確な API 契約（JSON in / JSON out）で疎結合に保つ
+- **AgentCore Runtime**: Nova Act ワークフロー（Python）を serverless でホスト
+  - VM レベル分離・最大8時間セッション・ゼロインフラ管理
+  - Lambda の 15 分制限から解放
+- **AgentCore Browser**: Nova Act の操作対象となるフルマネージドブラウザを CDP endpoint として払い出し
+  - Live View（AWS Console から実行中ブラウザのライブ配信）→ デモで「ママが食べログ操作中」を見せられる
+  - CAPTCHA 等で人間にテイクオーバーさせる仕組みも標準装備
+- **Nova Act SDK（Python）**: AgentCore Browser から払い出された CDP endpoint に接続し、自然言語指示でサイトを操作
+  - Python ファイルは F3 のワークフロー定義のみ（量は最小限）
+- **AgentCore Identity**: Google Calendar OAuth トークン等を `@requires_access_token` デコレータで Nova Act ワークフローへ自動注入
+  - Runtime/Gateway 同梱のため追加課金なし
+- **F3 完了後の付随処理**（旧 B3 を本層に吸収）:
+  - Google Calendar API: ユーザーカレンダーに予約イベントを自動登録（Nova Act 内で AgentCore Identity から OAuth トークンを受け取り実行）
+  - Amazon SES: 「予約確定メール風」通知を発信し、ユーザーへ「ママが予約しといたよ」感を強化
+
+実装パターン（AWS 公式推奨）：
+
+```python
+from bedrock_agentcore.tools.browser_client import browser_session
+from nova_act import NovaAct
+
+with browser_session(region="ap-northeast-1") as client:
+    ws_url, headers = client.generate_ws_headers()  # AgentCore Browser から CDP endpoint 取得
+    with NovaAct(
+        cdp_endpoint_url=ws_url,
+        cdp_headers=headers,
+        nova_act_api_key=...,
+        starting_page="https://tabelog.com/",
+    ) as nova_act:
+        result = nova_act.act("野菜が多いランチを19時に予約して")
+```
+
+メイン API 層（TypeScript / Hono）からは AgentCore Runtime を `InvokeAgentRuntimeCommand` で起動し、JSON in / JSON out の疎結合な契約で連携する。
+
+#### 5.2.3 フェーズ2 — 予選通過後〜決勝（6/26）までの段階統合
+書類審査（5/12）時点では設計のみ記述、予選通過後（5/30 〜 6/26）の期間で以下を段階的に実装統合する。決勝後の長期展望は §6 を参照。
+
+予選通過後、以下の AgentCore サービスを段階的に統合し、本サービスの完成度と AWS 活用幅を強化する：
+
+- **AgentCore Memory**: 短期＋長期メモリでママ人格と会話履歴を永続化、「**使うほどダメになる**」設計を実装基盤として支える
+- **AgentCore Gateway**: ホットペッパーAPI / Google Calendar API / 天気API を MCP ツール化して Nova Act ワークフローへ統一的に提供
+- **AgentCore Policy**: 倫理境界（公序良俗 NG・緊急停止）を Cedar ルールで宣言的に強制
+- **AgentCore Observability**: OpenTelemetry で Nova Act の各操作ステップを CloudWatch にトレース → 決勝デモで「ママの行動履歴」を可視化してプレゼン強化
+- **AgentCore Code Interpreter**: ダメ度メトリクスのスコア計算サンドボックス
 
 ### 5.3 インフラ（マルチリージョン構成）
 
-| リージョン | 役割 | 含まれるリソース |
-|---|---|---|
-| **`ap-northeast-1`（東京）** | メインリージョン | TypeScript Lambda（Hono）、API Gateway、Bedrock（テキスト・画像）、DynamoDB、S3、EventBridge Scheduler、SES |
-| **`us-east-1`（バージニア北部）** | Nova Act 専用 | Python Lambda（nova-act SDK・コンテナイメージ）／決勝拡張時は Bedrock AgentCore Runtime + Browser |
+Nova Act の AI 推論バックエンドが `us-east-1` のみ提供されているため、本サービスはマルチリージョン構成を採用する。**自前で管理するリソース（CDK 管理対象）はすべて `ap-northeast-1`（Tokyo）に集約** し、Nova Act 推論のみ `us-east-1` の AWS マネージドサービスを利用する。
 
-- Nova Act が `us-east-1` のみサポートのため、マルチリージョン構成は不可避
-- リージョン間連携: TypeScript Lambda → Python Lambda の **クロスリージョン Lambda Invoke**（IAM ポリシーで明示許可）
-- IaC: **AWS CDK（TypeScript）** — 1つの CDK プロジェクトで両リージョンのスタックを管理
+#### リソース配置
+
+| 配置先 | リソース |
+|---|---|
+| **`ap-northeast-1`（Tokyo・自前管理 / CDK 管理対象）** | Hono Lambda、API Gateway、Bedrock（Claude / Titan Image）、DynamoDB、S3、EventBridge Scheduler、SES、AgentCore Runtime、AgentCore Browser、AgentCore Identity、（決勝拡張）AgentCore Memory / Gateway / Policy / Observability / Code Interpreter |
+| **`us-east-1`（AWS マネージド / CDK 管理対象外）** | Nova Act の AI 推論バックエンド（SDK 経由で透過的に呼び出される、AWS 内部サービス） |
+
+#### リージョン跨ぎ通信
+- AgentCore Browser（Tokyo）が払い出す CDP endpoint に Nova Act SDK が接続
+- Nova Act SDK は内部で Nova Act 推論バックエンド（us-east-1）を呼び出し、操作判断を取得
+- 通信は AWS バックボーン経由（TLS 暗号化）で行われ、開発者はリージョン跨ぎを意識しない
+- 1回のブラウザ操作ステップあたり数百ミリ秒〜数秒のレイテンシ追加が発生（許容範囲、F3 全体で 30秒〜2分の処理）
+- 将来 Nova Act が `ap-northeast-1` に展開された際は同一リージョン化により高速化
+
+#### IaC
+- **AWS CDK（TypeScript）** — `ap-northeast-1` 向けの単一スタックで自前リソースを管理
+- Nova Act 推論バックエンドは AWS マネージドサービスのため CDK 管理対象外
 
 ### 5.4 セキュリティ
 - Security Baseline Extension 適用（全SECURITYルールをブロッキング制約として適用）
-- スマホデータへのアクセスには適切な権限管理・暗号化
-- ユーザー同意フローを設置（PII 取扱い）
+- 取り扱う PII の具体対象: カレンダー（予定）、購買履歴、位置情報、健康データ（睡眠・運動・食事）、チャット履歴、ママ溺愛度等のメトリクス、Google OAuth トークン、Nova Act が代理操作する各種 Web サービスの認証情報
+- 上記すべてに対して保存時暗号化（KMS）・通信時暗号化（TLS）・アクセス権の最小化を適用
+- 取得・利用・第三者提供についてユーザー同意フローを設置（個人情報保護法対応）
+- AgentCore Identity による OAuth トークンの集中管理（コードに認証情報を埋め込まない）
 
 ### 5.5 テスト
 - Property-Based Testing (PBT) Extension 適用
@@ -259,17 +309,19 @@
 ### 5.7 通知ポリシー
 - ママ人格のため**意図的に多めの通知**を許容（「うるさいママ」が世界観の一部）
 - 静音時間帯（深夜のC1除く）はユーザー設定で調整可能
-- 緊急停止（依存度ゼロ化）の手段を提供
+- 倫理境界に基づくユーザー側の依存度調整・緊急解除手段は §2.4 を参照
 
 ---
 
-## 6. 今後の展望（ハッカソンスコープ外）
+## 6. フェーズ3 — 決勝後の長期展望（ハッカソンスコープ外）
+
+ハッカソン決勝（6/26）以降、本サービスをプロダクションへ昇格させる際の拡張ロードマップ。フェーズ1（書類審査・予選 MVP）、フェーズ2（決勝までの段階統合・§5.2.3）に続く長期計画。
 
 | 機能 | 概要 |
 |------|------|
 | 人間味・失敗 | 微妙な服を提案する、起こすのを諦めるなど「完璧ではないお母さん感」 |
 | 定期メンテナンス | 美容院・歯医者・健康診断のリマインド・予約（Nova Act 拡張） |
-| 音声インタラクション | お母さんの声で話しかけてくれる（Polly + 将来的に Connect 拡張） |
+| 音声インタラクション | お母さんの声で話しかけてくれる（決勝後検討事項として Polly・Amazon Connect の採用を再評価。フェーズ1〜2では §4.3 の通り採用しない） |
 | 友人/家族のデータ統合 | 同意フローを整備の上、プレゼント・連絡催促を強化 |
 | Nova Act 操作対象の拡張 | 美容院予約・チケット予約・行政手続き・銀行手続きなど、ブラウザ操作で完結する任意のサービスへ拡張 |
 | 公式 API 連携への移行 | 法的整理・契約を進めて Uber Eats Marketplace API / TableCheck API / Reserve with Google パートナー連携などへ拡張（Nova Act + 公式 API のハイブリッド運用） |

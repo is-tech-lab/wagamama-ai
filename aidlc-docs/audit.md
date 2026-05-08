@@ -126,3 +126,61 @@
 - AWS CDK（TypeScript）で 1 プロジェクトから両リージョンのスタックを管理する方針
 
 ---
+
+## Requirements Analysis - AgentCore + Nova Act Integration (Option B)
+**Timestamp**: 2026-05-08T00:00:00Z
+**User Input**: "Bedrock じゃなくて Bedrock AgentCore を使った方がいい気がする / TS 対応はどうなの？ / Nova Act との連携できるのか / AgentCore Browser と Nova Act の関係を初学者にわかるように / Nova Act 立てるから結局マルチリージョンでは / Option B で進めて"
+**AI Response**: AgentCore の各サービスのリージョンサポート（ap-northeast-1 で Runtime/Browser/Memory/Gateway/Identity/Observability/Policy 等すべてGA済み）、TypeScript SDK の対応状況（Runtime/Browser/Identity が GA、Memory/Gateway/Observability は Coming soon）、Nova Act × AgentCore Browser の公式連携手順を確認。Nova Act 自体は us-east-1 のみという制約を踏まえ、3つの構成オプション（A: 全部 us-east-1 / B: 自前リソースは Tokyo 集約・Nova Act だけ us-east-1 / C: AgentCore を us-east-1 寄せ）を比較し、Option B を採用。
+**Context**: INCEPTION Phase - Requirements Analysis / §5.2 §5.3 の更新
+
+### 採用したアーキテクチャ（Option B）
+- **メイン API 層（ap-northeast-1）**: Hono Lambda、Bedrock Claude/Titan Image、DynamoDB、S3、EventBridge、SES、AgentCore Runtime/Browser/Identity
+- **エージェント実行層（ap-northeast-1）**: AgentCore Runtime 上で Nova Act ワークフロー（Python）を実行、AgentCore Browser が CDP endpoint を払い出して Nova Act が接続
+- **Nova Act AI 推論（us-east-1）**: SDK 経由で透過的に呼び出される AWS マネージドサービス、CDK 管理対象外
+- **CDK スタック**: ap-northeast-1 単一スタック、マルチスタック不要
+
+### 公式連携パターンの採用根拠
+AWS 公式ドキュメント「Using AgentCore Browser with Nova Act」に記載されたコードパターン（`browser_session()` で CDP endpoint と headers を取得し、Nova Act の `cdp_endpoint_url` / `cdp_headers` に渡す）をそのまま採用。これは AWS が公式に推奨する Nova Act × AgentCore Browser の連携方式であり、ハッカソン審査軸「創造性とテーマ適合性」「AI-DLCプロセスの実践と工夫」での加点が期待できる。
+
+### 決勝までに段階統合する AgentCore サービス
+書類審査時点では設計のみ記述、予選通過後に実装を進める：
+- AgentCore Memory（短期＋長期、「使うほどダメになる」基盤）
+- AgentCore Gateway（外部APIをMCPツール化）
+- AgentCore Policy（倫理境界をCedarルールで宣言的管理）
+- AgentCore Observability（実行トレース可視化、プレゼン強化）
+- AgentCore Code Interpreter（ダメ度メトリクススコア計算）
+
+### requirements.md 更新内容
+- §5.2 を「AgentCore + Nova Act 連携構成」に再構成（5.2.1 メインAPI層 / 5.2.2 エージェント実行層 / 5.2.3 決勝までに統合予定）
+- §5.2.2 に AWS 公式の連携コードパターン（`browser_session` + `NovaAct`）を実装パターンとして掲載
+- §5.3 を「マルチリージョン構成」に再構成、リソース配置表とリージョン跨ぎ通信の説明を追加
+- 自前リソース（CDK 管理対象）は ap-northeast-1 に集約、Nova Act 推論のみ us-east-1 の AWS マネージドサービスを利用
+
+---
+
+## Requirements Analysis - Full Document Review (Issue 1-10 Resolved)
+**Timestamp**: 2026-05-08T00:00:00Z
+**User Input**: "requirements.md を全文レビュー / 1〜10まで一旦対応して"
+**AI Response**: requirements.md 全文を最新状態でレビューし、内部矛盾・整合性・抜けを 10 件抽出。すべて一括対応。
+**Context**: INCEPTION Phase - Requirements Analysis / 全文レビュー結果反映
+
+### 修正した Issue 一覧
+| # | 区分 | 内容 | 対応 |
+|---|---|---|---|
+| 1 | 🔴 矛盾 | §2.4 と §5.7 で「緊急停止」が重複 | §5.7 から削除、§2.4 に集約。§5.7 は §2.4 への参照リンクに |
+| 2 | 🔴 矛盾 | §4.3「公式API連携は不要」が §6「公式 API 連携への移行」と齟齬 | §4.3 を「MVP では Nova Act で代替、将来的にハイブリッド運用へ拡張」と将来道筋を残す表現に変更 |
+| 3 | 🔴 重複 | §4.1 B3「画面外への通知連動」と §4.2 F6「Calendar 統合」が機能的に重複 | B3 を §5.2.2 エージェント実行層に「F3 完了後の付随処理」として吸収、§4.1 から B3 を削除 |
+| 4 | 🔴 整合 | B3 の Out of Scope 記述が曖昧 | Issue 3 解消により不要化 |
+| 5 | 🔴 整合 | §3.1 比較表に Web自動化ツール列がなく §3.2 と齟齬 | §3.1 に「Web自動化ツール（Playwright等）」列を追加、§3.2 から重複言及を整理 |
+| 6 | 🟡 改善 | §5.4 セキュリティで PII 対象が抽象的 | 取り扱う PII の具体対象（カレンダー・購買・位置・健康・チャット履歴・OAuth トークン・Web 認証情報等）を列挙 |
+| 7 | 🟡 改善 | §5.2.3 と §6 の時系列関係が不明瞭 | §5.2.3 を「フェーズ2 — 予選通過後〜決勝までの段階統合」、§6 を「フェーズ3 — 決勝後の長期展望」として時系列を明示 |
+| 8 | 🟡 改善 | §4.2 MVP 表のカテゴリ列で B3 と F6 重複 | Issue 3 解消により F6 = D2 のままで整合 |
+| 9 | 🟢 軽微 | §4.1 B1 の例示（食べログ/ホットペッパー/Uber Eats Web/Amazon）が予約・注文・購入混在 | B1 を「予約・注文・購入」3種で分類整理、Nova Act の汎用性を明示 |
+| 10 | 🟢 軽微 | §6 「Polly + 将来的に Connect 拡張」の時期表現が曖昧 | 「決勝後検討事項として Polly・Amazon Connect の採用を再評価。フェーズ1〜2では §4.3 の通り採用しない」と明示 |
+
+### 結果
+- 内部整合性: ✅ 5 件の矛盾をすべて解消
+- 説得力: ✅ PII 具体化・時系列フェーズ分け・比較表強化により書類審査の説得力向上
+- 表現統一: ✅ 「実質シングルリージョン」のような曖昧表現を排除し直接的な記述で統一
+
+---
